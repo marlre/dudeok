@@ -23,7 +23,7 @@ export default function Home() {
 
   const fetchVideos = async () => {
     setLoading(true);
-    const res = await fetch("/api/youtube-top50");
+    const res = await fetch("/api/youtube-shorts");
     const data = await res.json();
     setVideos(data.items || []);
     setLoading(false);
@@ -46,14 +46,25 @@ export default function Home() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>YouTube / Reddit / BMW 뉴스</h1>
-      {loading ? <p>로딩 중...</p> : (
-        <div>
+      <h1>YouTube 쇼츠 Top10</h1>
+      {loading ? (
+        <p>로딩 중...</p>
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "20px" }}>
           {videos.map((video) => (
-            <div key={video.id} style={{ marginBottom: "20px" }}>
-              <img src={video.snippet.thumbnails.medium.url} alt={video.snippet.title} />
-              <h2>{video.snippet.title}</h2>
-              <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer">
+            <div key={video.id} style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "10px", background: "#fff" }}>
+              <img
+                src={video.snippet.thumbnails.medium.url}
+                alt={video.snippet.title}
+                style={{ width: "100%", borderRadius: "8px" }}
+              />
+              <h2 style={{ fontSize: "16px", margin: "10px 0" }}>{video.snippet.title}</h2>
+              <a
+                href={`https://www.youtube.com/watch?v=${video.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "white", background: "red", padding: "6px 12px", borderRadius: "4px", textDecoration: "none" }}
+              >
                 영상보기
               </a>
             </div>
