@@ -22,8 +22,22 @@ export default function Top50() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>API 테스트 페이지</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <h1>YouTube 쇼츠 Top10</h1>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px' }}>
+        {data.items.map((video) => (
+          <div key={video.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
+            <img
+              src={video.snippet.thumbnails.high.url}
+              alt={video.snippet.title}
+              style={{ width: '100%', borderRadius: '8px' }}
+            />
+            <p>{video.snippet.title}</p>
+            <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer">
+              영상보기
+            </a>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
