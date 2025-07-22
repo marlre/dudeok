@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   const apiKey = process.env.YOUTUBE_API_KEY;
-  const regionCode = "KR"; // 한국 인기 영상
+  const regionCode = "KR";
   const maxResults = 10;
 
   try {
