@@ -1,14 +1,32 @@
 import { useState, useEffect } from "react";
-import Link from "next/link";
 
 export default function Home() {
   const [authorized, setAuthorized] = useState(false);
   const [password, setPassword] = useState("");
   const correctPassword = "2613";
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = () => {
-    if (password === correctPassword) setAuthorized(true);
-    else alert("비밀번호가 틀렸습니다.");
+    if (password === correctPassword) {
+      setAuthorized(true);
+    } else {
+      alert("비밀번호가 틀렸습니다.");
+    }
+  };
+
+  useEffect(() => {
+    if (authorized) {
+      fetchVideos();
+    }
+  }, [authorized]);
+
+  const fetchVideos = async () => {
+    setLoading(true);
+    const res = await fetch("/api/youtube-top50");
+    const data = await res.json();
+    setVideos(data.items || []);
+    setLoading(false);
   };
 
   if (!authorized) {
@@ -35,14 +53,30 @@ export default function Home() {
   return (
     <div className="p-4 sm:p-6 bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-center">YouTube / Reddit / BMW 뉴스</h1>
-      <p className="text-center text-gray-600">메인 페이지</p>
-      <div className="text-center mt-4">
-        <Link href="/top50?platform=youtube">
-          <button className="px-5 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600">
-            YouTube Top50 보기
-          </button>
-        </Link>
-      </div>
+      {loading ? (
+        <div className="flex justify-center items-center py-20">로딩 중...</div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {videos.map((video) => (
+            <div key={video.id} className="border rounded-lg shadow p-3 bg-white">
+              <img
+                src={video.snippet.thumbnails.medium.url}
+                alt={video.snippet.title}
+                className="w-full h-48 object-cover rounded"
+              />
+              <h2 className="text-lg font-semibold mt-2">{video.snippet.title}</h2>
+              <a
+                href={`https://www.youtube.com/watch?v=${video.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline mt-2 inline-block"
+              >
+                영상보기
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
