@@ -1,34 +1,14 @@
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+// pages/api/youtube-top50.js
+export default async function handler(req, res) {
+  const apiKey = process.env.YOUTUBE_API_KEY; // Vercel 환경변수에서 키 가져옴
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&regionCode=KR&maxResults=10&videoDuration=short&type=video&order=viewCount&key=${apiKey}`;
 
-export default function Top50Page() {
-  const router = useRouter();
-  const { platform } = router.query;
-  const [items, setItems] = useState([]);
-
-  useEffect(() => {
-    if (platform) fetchTop50(platform);
-  }, [platform]);
-
-  const fetchTop50 = async (platform) => {
-    const res = await fetch(`/api/${platform}-top50`);
-    const data = await res.json();
-    setItems(data);
-  };
-
-  return (
-    <div className="bg-gray-50 min-h-screen p-4 sm:p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">{platform?.toUpperCase()} Top 50</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {items.map((item, i) => (
-          <div key={i} className="border rounded-lg shadow p-3 bg-white">
-            <img src={item.thumbnail} alt={item.title} className="w-full h-48 object-cover rounded" />
-            <h2 className="text-lg font-semibold mt-2">{item.title}</h2>
-            {item.views && <p className="text-gray-500 text-sm mt-1">조회수: {item.views}</p>}
-            <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline mt-2 inline-block">보기</a>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("YouTube API Error:", error);
+    res.status(500).json({ error: "API 호출 실패" });
+  }
 }
