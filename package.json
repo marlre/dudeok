@@ -1,7 +1,8 @@
-
 {
-  "name": "youtube_shorts_top10",
+  "name": "youtube_shorts_top10_relaxed",
   "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +11,6 @@
   "dependencies": {
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest",
-    "node-fetch": "3"
+    "react-dom": "latest"
   }
 }
